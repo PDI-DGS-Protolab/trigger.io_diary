@@ -1,0 +1,43 @@
+{
+	"author": "Jimmy Collazos", 
+	"config_version": "2", 
+	"description": "Aplication for study API Trigger.io", 
+	"modules": {
+		"calendar": true, 
+		"contact": true, 
+		"file": true, 
+		"geolocation": true, 
+		"icons": {
+			"android": {
+				"36": "media/icon/icon36.png", 
+				"48": "media/icon/icon48.png", 
+				"72": "media/icon/icon72.png"
+			}, 
+			"ios": {
+				"114": "media/icon/icon114.png", 
+				"144": "media/icon/icon144.png", 
+				"57": "media/icon/icon57.png", 
+				"72": "media/icon/icon72-ios.png", 
+				"prerendered": true
+			}
+		}, 
+		"is": true, 
+		"logging": {
+			"level": "DEBUG"
+		}, 
+		"media": true, 
+		"notification": true, 
+		"prefs": true, 
+		"reload": true, 
+		"request": {
+			"permissions": [
+				"http://*/*", 
+				"https://*/*"
+			]
+		}, 
+		"tools": true
+	}, 
+	"name": "diarIO - triggerIO", 
+	"platform_version": "v1.4", 
+	"version": "0.1"
+}

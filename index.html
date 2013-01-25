@@ -1,0 +1,167 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <title>App for Evaluation</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="cleartype" content="on">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="lib/lungo-26b2616805fc359f4b7ec7574b5f89c634eec91b/lungo.css">
+  <link rel="stylesheet" href="lib/lungo-26b2616805fc359f4b7ec7574b5f89c634eec91b/lungo.icon.css">
+  <link rel="stylesheet" href="lib/lungo-26b2616805fc359f4b7ec7574b5f89c634eec91b/lungo.icon.brand.css">
+  <link rel="stylesheet" href="lib/lungo-26b2616805fc359f4b7ec7574b5f89c634eec91b/lungo.theme.default.css">
+
+  <link rel="stylesheet" href="css/app.css">
+
+  <!-- DEBUG
+<script src="https://trigger.io/catalyst/target/target-script-min.js#9CFED0EB-C998-4C60-A62E-6BB4005D2373"></script> -->
+
+  <body class="app">
+    <!-- listado de días -->
+    <section id="main" data-transition="slide" ng-controller="calendar">
+      <header>
+        <span class="title centered">Calendario</span>
+      </header>
+
+      <article id="main-calendar" class="active indented list  scroll">
+        <ul>
+          <li class="arrow" ng-repeat="day in enero" ng-class="toggleIfDayHasItem(day.dayId, 'arrow', 'light')">
+            <a data-router="section" day="day.dayId" ng-href="{{toggleIfDayHasItem(day.dayId, '#day', '#add')}}">
+              <div class="right bubble blue" ng-show="dayHasItem(day.dayId)" >
+                <span class="icon picture" ng-show="listItemWithDay.photo[day.dayId]"></span>
+                <span class="icon pencil" ng-show="listItemWithDay.note[day.dayId]"></span>
+                <span class="icon pushpin" ng-show="listItemWithDay.position[day.dayId]"></span>
+              </div>
+              <strong class="text bold">{{WEEK_DAY_NAME[day.dayWeek]}}</strong>
+              <div class="text small">{{day.dayId}}</div>
+            </a>
+          </li>
+          <li class="anchor">Febrerro</li>
+          <li class="arrow" ng-repeat="day in febrero" ng-class="toggleIfDayHasItem(day.dayId, 'arrow', 'light')">
+            <a data-router="section" day="day.dayId" ng-href="{{toggleIfDayHasItem(day.dayId, '#day', '#add')}}">
+              <div class="right bubble blue" ng-show="dayHasItem(day.dayId)" >
+                <span class="icon picture" ng-show="listItemWithDay.photo[day.dayId]"></span>
+                <span class="icon pencil" ng-show="listItemWithDay.note[day.dayId]"></span>
+                <span class="icon pushpin" ng-show="listItemWithDay.position[day.dayId]"></span>
+              </div>
+              <strong class="text bold">{{WEEK_DAY_NAME[day.dayWeek]}}</strong>
+              <div class="text small">{{day.dayId}}</div>
+            </a>
+          </li>
+        </ul>
+      </article>
+    </section>
+    <!-- día seleccionado previamente, se rellena con lo que el usuario haya introducido anterior mente -->
+    <section id="day" data-transition="slide" ng-controller="day">
+      <header data-title="Día - 01/02" class="extended">
+        <nav class="box">
+          <a href="#back" data-router="section" data-icon="left"></a>
+        </nav>
+        <nav class="right box">
+            <a href="#add" data-router="section" data-icon="plus"></a>
+        </nav>
+      </header>
+      <nav class="groupbar">
+        <a href="#day-art1" data-router="article" data-label="Nota" class="active"></a>
+        <a href="#day-art2" data-router="article" data-label="Foto"></a>
+        <a href="#day-art3" data-router="article" data-label="Tweets" ng-click="loadTwitts()"></a>
+        <a href="#day-art4" data-router="article" data-label="Posición"></a>
+      </nav>
+      <article id="day-art1" class="active indented list  scroll">
+        <ul>
+          <li ng-show="item.note.length == 0" data-icon="warning">
+            <i>Añade una nota</i>
+          </li>
+          <li ng-repeat="note in item.note">{{note.note}}</li>
+        </ul>
+      </article>
+      <article id="day-art2" class="indented scroll">
+        <ul>
+          <li ng-repeat="photo in item.photo">
+            <img ng-src="{{photo.uri}}" />
+          <li>
+        </ul>
+      </article>
+      <article id="day-art3" class="indented list  scroll">
+        <ul>
+          <li ng-repeat="tweet in item.twitts">
+            <img ng-src="{{tweet.profile_image_url}}" class="icon"/>
+            <small>@{{tweet.from_user}}</small>
+            <strong>{{tweet.text}}</strong>
+          </li>
+        </ul>
+      </article>
+      <article id="day-art4" class="indented list  scroll">
+        <ul>
+          <li ng-show="item.position.length == 0" data-icon="warning">
+            <i>Añade una posición</i>
+          </li>
+          <li ng-repeat="position in item.position">
+            <div>
+              <img ng-src="http://maps.googleapis.com/maps/api/staticmap?size=300x100&maptype=roadmap&markers=color:blue%7C{{position.latlng}}&sensor=false"/>
+            </div>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- Crear nuevas "notas" asociadas a un día -->
+    <section id="add" data-transition="slide" ng-controller="add">
+        <header data-title="Crear - 01/02" class="extended">
+            <nav class="box">
+                <a href="#back" data-router="section" data-icon="left"></a>
+            </nav>
+        </header>
+
+        <nav class="groupbar">
+            <a href="#add-art1" data-router="article" data-label="Nota" class="active"></a>
+            <a href="#add-art2" data-router="article" data-label="Foto"></a>
+            <a href="#add-art3" data-router="article" data-label="Posición" ng-click="setLocation()"></a>
+        </nav>
+
+        <article id="add-art1" class="active indented">
+          <form action=".">
+            <textarea ng-model="data.note" placeholder="Añade una nueva nota"></textarea>
+            <a href="#" class="button accept" ng-click="addNote()">Guardar</a>
+          </form>
+        </article>
+        <article id="add-art2" class="indented">
+          <a href="#" class="button accept" ng-click="addPhoto()">Abrir cámara</a>
+        </article>
+        <article id="add-art3" class="indented">
+          <form action=".">
+            <dl>
+              <dt>Coordenadas cartesianas</dt>
+              <dd> <input type="text" name="position" ng-model="data.position" /> </dd>
+            </dl>
+            <a href="#" class="button accept" ng-click="addPosition()">Guardar</a>
+          </form>
+        </article>
+    </section>
+
+
+    <!-- Lungo - Dependencies -->
+    <script src="lib/quojs/quo.debug.js"></script>
+    <script src="lib/lungo-26b2616805fc359f4b7ec7574b5f89c634eec91b/lungo.debug.js"></script>
+    <!-- Angular Dependencies -->
+    <script type="text/javascript" src="lib/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-resource.min.js"></script>
+    <script type="text/javascript" src="lib/lungojs-angular-adapter.0.0.1.js"></script>
+    <!-- App -->
+    <script type="text/javascript" src="script/app.js"></script>
+    <!-- App/controllers -->
+    <script type="text/javascript" src="script/controller/add.js"></script>
+    <script type="text/javascript" src="script/controller/calendar.js"></script>
+    <script type="text/javascript" src="script/controller/day.js"></script>
+    <!-- App/directives -->
+    <script type="text/javascript" src="script/directive/day.js"></script>
+    <!-- App/services -->
+    <script type="text/javascript" src="script/service/webdb.js"></script>
+    <script type="text/javascript" src="script/service/twitter.js"></script>
+  </body>
+</html>
